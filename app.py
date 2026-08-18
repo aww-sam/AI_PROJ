@@ -11,7 +11,7 @@ from PIL import Image
 from torchvision import models, transforms
 
 MODEL_PATH = Path("fault_classifier.pt")
-CLASSES_PATH = Path("class_names.json")
+CLASS_CANDIDATES = [Path("classes_names.json"), Path("class_names.json")]
 IMG_SIZE = 224
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -49,10 +49,11 @@ st.set_page_config(page_title="AI Engineering Troubleshooting Assistant", page_i
 
 @st.cache_resource
 def load_model():
-    if not MODEL_PATH.exists() or not CLASSES_PATH.exists():
+    classes_path = next((p for p in CLASS_CANDIDATES if p.exists()), None)
+    if not MODEL_PATH.exists() or classes_path is None:
         return None, None
 
-    class_names = json.loads(CLASSES_PATH.read_text())
+    class_names = json.loads(classes_path.read_text())
 
     model = models.resnet18(weights=None)
     model.fc = nn.Linear(model.fc.in_features, len(class_names))
@@ -101,8 +102,8 @@ model, class_names = load_model()
 
 if model is None:
     st.error(
-        "No trained model found. Run `python prepare_dataset.py` then "
-        "`python train.py` first to produce fault_classifier.pth."
+        "No trained model found. Run `python dataset_prepare.py` then "
+        "`python train.py` first to produce fault_classifier.pt."
     )
     st.stop()
 
