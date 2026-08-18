@@ -12,15 +12,22 @@ PADDING=0.15 # for extra padding around each
 
 ## to load classes names
 def load_class_names() -> list[str]:
+    with DATA_YAML.open("r", encoding="utf-8") as f:
+        config = yaml.safe_load(f) or {}
 
-    config = yaml.safe_load(DATA_YAML.read_text())
-    names = config['names']
+    names = config.get("names", [])
 
     if isinstance(names, dict):
-        return [names[i] for i in sorted(names)]
+        ordered = []
+        for i in sorted(int(key) for key in names):
+            value = names.get(i)
+            if value is None:
+                value = names.get(str(i))
+            ordered.append(value)
+        return ordered
     return list(names)
 
-#crop the image to make it 15% larger
+#crop defect part and  the make it 15% larger
 def crop_with_padding(image:Image.Image, x_c, y_c, w, h, pad=PADDING):
 
     img_w , img_h = image.size
