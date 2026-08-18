@@ -44,7 +44,7 @@ FAULT_INFO = {
     },
 }
 
-st.set_page_config(page_title="AI Engineering Troubleshooting Assistant")
+st.set_page_config(page_title="AI Engineering Troubleshooting Assistant(PCB)")
 
 
 @st.cache_resource
