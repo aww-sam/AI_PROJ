@@ -10,7 +10,7 @@ from gtts import gTTS
 from PIL import Image
 from torchvision import models, transforms
 
-MODEL_PATH = Path("fault_classifier.pth")
+MODEL_PATH = Path("fault_classifier.pt")
 CLASSES_PATH = Path("class_names.json")
 IMG_SIZE = 224
 
