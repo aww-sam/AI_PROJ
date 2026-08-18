@@ -4,3 +4,4 @@ torchvision>=0.15
 pillow>=10.0
 gTTS>=2.5
 deep-translator>=1.11
+tqdm>=4.66

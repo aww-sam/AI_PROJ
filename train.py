@@ -6,6 +6,8 @@ import torch.nn as nn
 from torch.utils.data import DataLoader
 from torchvision import datasets, models, transforms
 
+from tqdm import tqdm
+
 DATA_DIR = Path("data")
 OUTPUT_MODEL = Path("fault_classifier.pt")
 OUTPUT_CLASSES = Path("classes_names.json")
@@ -58,7 +60,7 @@ def train_one_epoch(model, loader, criterion, optimizer):
     model.train()
     running_loss, correct, total= 0.0, 0, 0
 
-    for images,labels in loader:
+    for images, labels in tqdm(loader , desc="Training", leave= False):
         images,labels = images.to(device), labels.to(device)
 
         optimizer.zero_grad()
@@ -71,7 +73,7 @@ def train_one_epoch(model, loader, criterion, optimizer):
         correct += (outputs.argmax(1) == labels).sum().item()
         total += labels.size(0)
 
-        return running_loss / total, correct / total
+    return running_loss / total, correct / total
 
 @torch.no_grad()
 def evaluate(model, loader, criterion):
